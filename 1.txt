@@ -1,0 +1,44 @@
+create or replace type persona as object(
+    
+    nom varchar2(50),
+    cognom varchar2(50),
+    data_naixement date,
+    adreça tipus_adreça,
+
+    constructor function persona(nom varchar2,cognom varchar2,data_naixement date,carrer varchar2,cp varchar2,
+    ciutat varchar2,provincia varchar2)return self as result,
+    member procedure mostrar_info,
+    member function getEdat return number,
+    map member function convert return number
+
+
+);  
+create or replace type body persona as
+
+    constructor function persona(nom varchar2,cognom varchar2,data_naixement date,carrer varchar2,cp varchar2,
+    ciutat varchar2,provincia varchar2) return self as result is
+    begin
+        self.nom :=nom ;
+        self.cognom :=cognom ;
+        self.data_naixement :=data_naixement ;
+        adreça := tipus_adreça(carrer,cp,ciutat,provincia);
+        
+        return;
+    end;
+  
+    member procedure mostrar_info is 
+    begin 
+     dbms_output.put_line('Nom: ' || nom || ' Cognom: ' || cognom ||  'Data de naixament :' || data_naixement||  ' Carrer:' || adreça.carrer|| ' Codi postal : ' || adreça.cp || ' Ciutat: ' || adreça.ciutat || ' Provincia: ' || adreça.provincia); 
+    end;
+    
+    member function getedat return number is 
+    begin 
+        return trunc(months_between(sysdate,data_naixement)/12);
+    end;
+    
+    map member function convert return number is 
+    begin 
+        return trunc(months_between(sysdate,data_naixement)/12);
+    end;
+    
+end;
